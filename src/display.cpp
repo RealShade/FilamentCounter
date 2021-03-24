@@ -1,19 +1,25 @@
 #include "header.h"
 
-char msg[7];
-void printSpent(double spent) {
-  lcd.setCursor(0, 1);
-  dtostrf(spent, 7, 2, msg);
-  lcd.print(msg);
-  Serial.println(spent);
+char msg[16];
+void Display::printUUID() {
+  clear(0);
+  printMsg(spool.getUUID(), 0);
 }
-void printUUID(const char *uuid) {
-  lcd.setCursor(0, 0);
-  lcd.print(uuid);
-  Serial.println(uuid);
+void Display::printSpent() {
+  dtostrf(spool.getSpent(), 7, 2, msg);
+  clear(1);
+  printMsg(msg, 1);
 }
-void printMsg(const char *msg) {
-  lcd.setCursor(0, 1);
+void Display::printHold(const char *text, int counter = 0) {
+  clear(1);
+  sprintf(msg, "%s%c", text, char(counter));
+  printMsg(msg, 1);
+}
+void Display::clear(short row) {
+  printMsg("                ", row);
+}
+void Display::printMsg(const char *msg, short row = 0) {
+  lcd.setCursor(0, row);
   lcd.print(msg);
   Serial.println(msg);
 }

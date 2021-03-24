@@ -1,6 +1,6 @@
-class Storage {
+class Spool {
 public:
-  Storage(const char *uuid);
+  Spool(const char *uuid);
   const char *getUUID();
   double getSpent();
   void incSpent(double diff);

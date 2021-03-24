@@ -1,37 +1,53 @@
-#include "button.h"
-#include "display.h"
 #include "header.h"
-#include "optical.h"
+
+int PAIR_1_PIN = 9;
+int PAIR_2_PIN = 8;
+int RFC_RST_PIN = 10;
+int RFC_SS_PIN = 11;
+int BUTTON_PIN = 7;
+double GEAR_CIRCUMFERENCE = 8 * PI;
+int DIRECTION = -1;
+double DIFF_FOR_SAVE = 200;
+int HOLD_COUNTER = 5;
+unsigned long HOLD_DETECT = 500;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-Storage *st;
 
-int PAIR1PIN = 9;           // Pin for optical pair 1
-int PAIR2PIN = 8;           // Pin for optical pair 1
-int BUTTONPIN = 7;          // Pin for button
-double ROLLLENGTH = 8 * PI; // 8 - diameter of the toothed shaft (mm)
-int DIRECTION = -1;         // Rotation direction of the toothed shaft
-double DIFFFORSAVE = 200; // Differences between previous value, that triggered
-                          // saving the value (mm)
+Spool spool = NULL;
+Config config = Config();
+Menu menu = Menu();
+Display display = Display();
+Button button = Button();
+
+byte charWait[5][8] = {
+    {0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000},
+    {0b11000, 0b11000, 0b11000, 0b11000, 0b11000, 0b11000, 0b11000, 0b11000},
+    {0b11100, 0b11100, 0b11100, 0b11100, 0b11100, 0b11100, 0b11100, 0b11100},
+    {0b11110, 0b11110, 0b11110, 0b11110, 0b11110, 0b11110, 0b11110, 0b11110},
+    {0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111}};
 
 double spentLastSave = 0; // Last saved value;
 
 void setup() {
-  Serial.begin(9600);
-  lcd.init(); // initialize the lcd
+  menu.setMode(Menu::waitForFilament);
+
+  lcd.init();
   lcd.backlight();
   lcd.clear();
+
+  for (int i = 0; i < 5; i++) {
+    lcd.createChar(i, charWait[i]);
+  }
+
   setupPair();
-  setupButton();
-  st = new Storage("1234567890");
-  printUUID(st->getUUID());
-  printSpent(st->getSpent());
+
+  menu.show();
 }
 
 void loop() {
   loopPair();
-  loopButton();
-  if (abs(st->getSpent() - spentLastSave) >= DIFFFORSAVE) {
-    st->write();
+  button.check();
+  if (abs(spool.getSpent() - spentLastSave) >= DIFF_FOR_SAVE) {
+    spool.write();
   }
 }
