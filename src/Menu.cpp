@@ -1,27 +1,28 @@
 #include "header.h"
 
-Menu::Menu() {}
 void Menu::setMode(Mode mode) { _mode = mode; }
-Menu::Mode Menu::getMode() {
-  return _mode;
-}
+
+Menu::Mode Menu::getMode() { return _mode; }
+
 void Menu::show(int counter) {
   switch (_mode) {
-  case Menu::waitForFilament:
+  case Mode::waitForFilament:
     display.printMsg("Wait for spool", 0);
     break;
-  case Menu::spent:
+  case Mode::spent:
     display.printSpent();
     break;
-  case Menu::holdForConfig:
+  case Mode::holdForConfig:
     display.printHold("Hold for conf", counter);
     break;
-  case Menu::config:
-    break;
-  case Menu::holdForReset:
+  case Mode::holdForReset:
     display.printHold("Hold for reset", counter);
     break;
-  case Menu::reset:
+  case Mode::config:
+    config.show();
+    break;
+  case Mode::reset:
+    display.printMsg("Reset done", 1);
     break;
   }
 }

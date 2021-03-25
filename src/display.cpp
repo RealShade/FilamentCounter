@@ -3,10 +3,10 @@
 char msg[16];
 void Display::printUUID() {
   clear(0);
-  printMsg(spool.getUUID(), 0);
+  printMsg(spool->getUUID(), 0);
 }
 void Display::printSpent() {
-  dtostrf(spool.getSpent(), 7, 2, msg);
+  dtostrf(spool->getSpent(), 7, 2, msg);
   clear(1);
   printMsg(msg, 1);
 }

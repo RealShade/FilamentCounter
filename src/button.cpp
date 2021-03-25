@@ -9,43 +9,47 @@ Button::Button() {
 }
 
 void Button::check() {
-  int __currentState = digitalRead(BUTTON_PIN);
+  _currentState = digitalRead(BUTTON_PIN);
 
-  if (__currentState != _prevState) {
-    _prevState = __currentState;
+  if (_currentState != _prevState) {
+
     _pressTimeStart = millis();
     _counter = HOLD_COUNTER + 1;
 
     // If button release
-    if (__currentState == LOW) {
+    if (_currentState == LOW) {
       switch (menu.getMode()) {
-      case Menu::spent:
-        menu.setMode(Menu::holdForConfig);
+      case Menu::Mode::spent:
+        menu.setMode(Menu::Mode::holdForConfig);
         break;
-      case Menu::holdForConfig:
-        menu.setMode(Menu::holdForReset);
+      case Menu::Mode::holdForConfig:
+        menu.setMode(Menu::Mode::holdForReset);
         break;
-      case Menu::holdForReset:
-        menu.setMode(Menu::spent);
+      case Menu::Mode::holdForReset:
+        menu.setMode(Menu::Mode::spent);
         break;
       }
       menu.show();
     }
-  } else if (__currentState == HIGH) {
+    _prevState = _currentState;
+
+  } else if (_currentState == HIGH) {
+
     if (millis() - _pressTimeStart > HOLD_DETECT) {
-      seconds = static_cast<int>((millis() - _pressTimeStart)*2);
+      seconds = static_cast<int>((millis() - _pressTimeStart) * 2);
       if (seconds < HOLD_COUNTER) {
         if (_counter > HOLD_COUNTER - seconds) {
           _counter = HOLD_COUNTER - seconds;
-          menu.show();
+          menu.show(_counter);
         }
       } else {
         switch (menu.getMode()) {
-        case Menu::holdForConfig:
-          menu.setMode(Menu::config);
+        case Menu::Mode::holdForConfig:
+          menu.setMode(Menu::Mode::config);
           break;
-        case Menu::holdForReset:
-          menu.setMode(Menu::reset);
+        case Menu::Mode::holdForReset:
+          menu.setMode(Menu::Mode::reset);
+          spool->reset();
           break;
         }
         menu.show();

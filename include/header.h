@@ -10,10 +10,9 @@
 #include "Config.h"
 #include "Display.h"
 #include "Menu.h"
+#include "Optical.h"
 #include "Rfid.h"
 #include "Spool.h"
-
-#include "optical.h"
 
 extern int PAIR_1_PIN;            // Pin for optical pair 1
 extern int PAIR_2_PIN;            // Pin for optical pair 1
@@ -28,10 +27,14 @@ extern int HOLD_COUNTER;          // Half-seconds for counting on hold button
 extern unsigned long HOLD_DETECT; // Milliseconds for detect holding button
 
 extern LiquidCrystal_I2C lcd;
-extern Spool spool;
+extern MFRC522 rider;
+
+extern Spool *spool;
 extern Config config;
 extern Menu menu;
 extern Display display;
 extern Button button;
+extern OpticalPair opticalPair;
+extern Rfid rfid;
 
 #endif
