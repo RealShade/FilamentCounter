@@ -48,7 +48,7 @@ void setup() {
 }
 
 void loop() {
-  // button.check();
+  button.check();
   rfid.check();
   if (spool != NULL) {
     opticalPair.check();
