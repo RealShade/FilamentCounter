@@ -3,6 +3,9 @@
 int seconds;
 
 Button::Button() {
+  if (DEBUG_MODE) {
+    Serial.println("Button init");
+  }
   pinMode(BUTTON_PIN, INPUT);
   _prevState = digitalRead(BUTTON_PIN);
   _pressTimeStart = millis();
@@ -12,24 +15,26 @@ void Button::check() {
   _currentState = digitalRead(BUTTON_PIN);
 
   if (_currentState != _prevState) {
-
+    if (DEBUG_MODE) {
+      Serial.print("Button state: ");
+      Serial.println(_currentState ? "push" : "release");
+    }
     _pressTimeStart = millis();
     _counter = HOLD_COUNTER + 1;
 
     // If button release
     if (_currentState == LOW) {
-      switch (menu.getMode()) {
+      switch (menu->getMode()) {
       case Menu::Mode::spent:
-        menu.setMode(Menu::Mode::holdForConfig);
+        menu->setMode(Menu::Mode::holdForConfig);
         break;
       case Menu::Mode::holdForConfig:
-        menu.setMode(Menu::Mode::holdForReset);
+        menu->setMode(Menu::Mode::holdForReset);
         break;
-      case Menu::Mode::holdForReset:
-        menu.setMode(Menu::Mode::spent);
+      default:
+        menu->setMode(Menu::Mode::spent);
         break;
       }
-      menu.show();
     }
     _prevState = _currentState;
 
@@ -40,19 +45,20 @@ void Button::check() {
       if (seconds < HOLD_COUNTER) {
         if (_counter > HOLD_COUNTER - seconds) {
           _counter = HOLD_COUNTER - seconds;
-          menu.show(_counter);
+          menu->show(_counter);
         }
       } else {
-        switch (menu.getMode()) {
+        switch (menu->getMode()) {
         case Menu::Mode::holdForConfig:
-          menu.setMode(Menu::Mode::config);
+          menu->setMode(Menu::Mode::config);
           break;
         case Menu::Mode::holdForReset:
-          menu.setMode(Menu::Mode::reset);
+          menu->setMode(Menu::Mode::reset);
           spool->reset();
           break;
+        default:
+          menu->setMode(Menu::Mode::spent);
         }
-        menu.show();
       }
     }
   }

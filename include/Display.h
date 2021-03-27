@@ -1,5 +1,6 @@
 class Display {
 public:
+  Display();
   void printUUID();
   void printSpent();
   void printHold(const char *text, int counter);

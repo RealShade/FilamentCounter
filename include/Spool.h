@@ -1,16 +1,26 @@
+#ifndef DEFSPOOL
+#define DEFSPOOL
+
+#include <Arduino.h>
+
+const char *unpackUUIDString(byte _uuid[4]);
+
 class Spool {
 public:
-  Spool(unsigned char uuid[4]);
-  const unsigned char *getUUID();
-  const char *getUUIDString();
-  double getSpent();
+  Spool(byte uuid[4]);
+  byte *getUUID();
+  void getUUID(byte uuid[4]);
+  float getSpent();
+  void setSpent(float spent);
   void incSpent(double diff);
   void write();
   void reset();
 
 private:
   void _read();
-  unsigned char _uuid[4];
-  double _spent = 0;
-  double _spentLastSave = 0;
+  byte _uuid[4];
+  float _spent = 0;
+  float _spentLastSave = 0;
 };
+
+#endif

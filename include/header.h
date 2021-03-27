@@ -10,31 +10,33 @@
 #include "Config.h"
 #include "Display.h"
 #include "Menu.h"
-#include "Optical.h"
+#include "Optocoupler.h"
 #include "Rfid.h"
 #include "Spool.h"
+#include "Storage.h"
 
-extern int PAIR_1_PIN;            // Pin for optical pair 1
-extern int PAIR_2_PIN;            // Pin for optical pair 1
-extern int RFC_RST_PIN;           // RFID rest pin
-extern int RFC_SS_PIN;            // RFID selector pin
-extern int BUTTON_PIN;            // Pin for button
-extern double GEAR_CIRCUMFERENCE; // 8 - diameter of the toothed shaft (mm)
-extern int DIRECTION;             // Rotation direction of the toothed shaft
-extern double DIFF_FOR_SAVE;      // Differences between previous value, that
-                                  // triggered saving the value (mm)
-extern int HOLD_COUNTER;          // Half-seconds for counting on hold button
-extern unsigned long HOLD_DETECT; // Milliseconds for detect holding button
+#define PAIR_1_PIN 9
+#define PAIR_2_PIN 8
+#define RFC_SS_PIN 53
+#define RFC_RST_PIN 5
+#define BUTTON_PIN 7
+#define GEAR_CIRCUMFERENCE 8 * PI
+#define DIRECTION -1
+#define DIFF_FOR_SAVE 200
+#define HOLD_COUNTER 5
+#define HOLD_DETECT 500
+#define DEBUG_MODE 1
 
 extern LiquidCrystal_I2C lcd;
 extern MFRC522 rider;
 
 extern Spool *spool;
-extern Config config;
-extern Menu menu;
-extern Display display;
-extern Button button;
-extern OpticalPair opticalPair;
-extern Rfid rfid;
+extern Config *config;
+extern Menu *menu;
+extern Display *display;
+extern Button *button;
+extern Optocoupler *optocoupler;
+extern Rfid *rfid;
+extern Storage *storage;
 
 #endif

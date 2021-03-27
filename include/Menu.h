@@ -9,6 +9,7 @@ public:
     reset = 5
   };
 
+  Menu();
   void show(int counter = 0);
   void setMode(Mode mode);
   Mode getMode();

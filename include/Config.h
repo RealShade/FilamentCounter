@@ -1,10 +1,21 @@
 class Config {
 public:
-  enum class Options : short { notImplemented = 0 };
+  struct Options {
+    bool buzzerOn = true;
+    bool lcdAlwaysOn = true;
+    float direction = -1;
+  };
+  enum class MenuOptions : short { notImplemented = 0 };
+  Config();
   void show();
+  void setBuzzerOn(bool isBuzzerOn);
+  void setLcdAlwaysOn(bool isLcdAlwaysOn);
+  void setDirection(float direction);
+  bool isBuzzerOn();
+  bool isLcdAlwaysOn();
+  float getDirection();
 
 private:
-  void _read();
-  void _write();
-  Options _option = Options::notImplemented;
+  MenuOptions _menuOption = MenuOptions::notImplemented;
+  Options _options;
 };
