@@ -22,14 +22,13 @@ void Display::printUUID()
 
 void Display::printSpent()
 {
-  dtostrf(spool->getSpent(), 7, 3, msg);
   clear(1);
+  dtostrf(spool->getSpent(), 7, 3, msg);
   printMsg(msg, 1);
 }
 
 void Display::printHold(const char *text, int counter = 0)
 {
-  clear(1);
   sprintf(msg, "%s%c", text, char(counter));
   printMsg(msg, 1);
 }

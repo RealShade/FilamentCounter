@@ -81,7 +81,7 @@ void Storage::writeOptions()
   EEPROM.put(ADDR_OPTIONS, _packOptions());
   if (DEBUG_MODE)
   {
-    Serial.print("done");
+    Serial.println("done");
   }
 }
 
@@ -98,8 +98,25 @@ void Storage::writeSpool(SpoolRow *spoolRow, byte spoolIdx)
   Serial.println("done");
 }
 
-void initEEPROM() { EEPROM.put(ADDR_OPTIONS, 255); }
+void Storage::clearEEPROM()
+{
+  if (DEBUG_MODE)
+  {
+    Serial.print("Clearing EEPROM... ");
+  }
 
+  for (unsigned int addr = 0; addr < EEPROM.length(); addr++)
+  {
+    EEPROM.update(addr, 255);
+  }
+
+  if (DEBUG_MODE)
+  {
+    Serial.println("done");
+    _readOptions();
+    _readSpools();
+  }
+}
 // *****************************************************************************
 
 void Storage::_readOptions()
@@ -111,16 +128,20 @@ void Storage::_readOptions()
     Serial.print("Read options: ");
   }
   EEPROM.get(0, options);
-  Serial.println(options, BIN);
 
   // If the value of first cell is 255, it means that EEPROM is empty
   if (options == 255)
   {
-    _initDefault();
+    if (DEBUG_MODE)
+    {
+      Serial.println("init default options");
+    }
+    _unpackOptions(BIT_BUZZER + BIT_LCD_ALWAYS_ON);
     writeOptions();
   }
   else
   {
+    Serial.println();
     _unpackOptions(options);
   }
 }
@@ -129,7 +150,7 @@ void Storage::_readSpools()
 {
   if (DEBUG_MODE)
   {
-    Serial.print("Read spools... ");
+    Serial.println("Read spools... ");
   }
 
   for (int i = 0; i < SPOOL_LIMIT; i++)
@@ -137,25 +158,19 @@ void Storage::_readSpools()
     EEPROM.get(_getAddrByIdx(i), _spoolCache[i]);
     if (DEBUG_MODE)
     {
-      if (_spoolCache[i].hasData == 1) {
-      Serial.print("Found ");
-      Serial.println(unpackUUIDString(_spoolCache[i].uuid));
+      if (_spoolCache[i].hasData == 1)
+      {
+        Serial.print("... found ");
+        Serial.print(unpackUUIDString(_spoolCache[i].uuid));
+        Serial.print(" ");
+        Serial.println(_spoolCache[i].spentInteger + static_cast<double>(_spoolCache[i].spentDecimal) / 100);
       }
     }
   }
   if (DEBUG_MODE)
   {
-    Serial.println("done");
+    Serial.println("... done");
   }
-}
-
-void Storage::_initDefault()
-{
-  if (DEBUG_MODE)
-  {
-    Serial.println("Init default options");
-  }
-  _unpackOptions(BIT_BUZZER + BIT_LCD_ALWAYS_ON);
 }
 
 void Storage::_unpackOptions(byte options)
@@ -175,24 +190,4 @@ byte Storage::_packOptions()
   return static_cast<byte>(config->isBuzzerOn()) * BIT_BUZZER +
          static_cast<byte>(config->isLcdAlwaysOn()) * BIT_LCD_ALWAYS_ON +
          static_cast<byte>(config->getDirection() == 1) * BIT_DIRECTION;
-}
-
-void Storage::_clearEEPROM()
-{
-  if (DEBUG_MODE)
-  {
-    Serial.print("Clearing EEPROM... ");
-  }
-
-  for (unsigned int addr = 0; addr < EEPROM.length(); addr++)
-  {
-    EEPROM.update(addr, 255);
-  }
-
-  if (DEBUG_MODE)
-  {
-    Serial.println("done");
-    _readOptions();
-    _readSpools();
-  }
 }

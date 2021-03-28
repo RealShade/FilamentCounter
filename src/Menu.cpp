@@ -19,14 +19,15 @@ void Menu::setMode(Mode mode) {
   show();
   if (DEBUG_MODE == 1) {
     Serial.print("Set mode: ");
-    Serial.println((int)mode);
+    Serial.println(static_cast<int>(mode));
   }
 }
 
 void Menu::show(int counter) {
   switch (_mode) {
   case Mode::waitForFilament:
-    display->printMsg("Wait for spool", 0);
+    display->clear(1);
+    display->printMsg("Wait for spool  ", 0);
     break;
   case Mode::spent:
     display->printUUID();
@@ -45,12 +46,12 @@ void Menu::show(int counter) {
     config->show();
     break;
   case Mode::reset:
-    spool->setSpent(0);
-    spool->write();
-    display->printMsg("Spool reseted", 1);
+    spool->reset();
+    display->printMsg("Spool reseted   ", 1);
     break;
   case Mode::clearEEPROM:
-    display->printMsg("EEPROM cleared", 1);
+    storage->clearEEPROM();
+    display->printMsg("EEPROM cleared  ", 1);
     break;
   }
 }

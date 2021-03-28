@@ -12,7 +12,6 @@ public:
   byte *getUUID();
   void getUUID(byte uuid[4]);
   double getSpent();
-  void setSpent(double spent);
   void incSpent(double diff);
   void write();
   void reset();

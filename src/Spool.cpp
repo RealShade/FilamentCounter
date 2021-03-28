@@ -35,16 +35,6 @@ void Spool::getUUID(byte uuid[4]) { uuid = _uuid; }
 
 double Spool::getSpent() { return _spent; }
 
-void Spool::setSpent(double spent)
-{
-  if (DEBUG_MODE == 1)
-  {
-    Serial.print("Manually set spent: ");
-    Serial.println(spent);
-  }
-  _spent = spent;
-}
-
 void Spool::incSpent(double diff)
 {
   _spent += (static_cast<double>(DIRECTION) * diff);
@@ -64,8 +54,8 @@ void Spool::write()
   Storage::SpoolRow spoolRow;
   spoolRow.hasData = 1;
   memcpy(spoolRow.uuid, _uuid, 4);
-  spoolRow.spentInteger = (int)_spent;
-  spoolRow.spentDecimal = (int)((_spent - spoolRow.spentInteger) * 100);
+  spoolRow.spentInteger = static_cast<int>(_spent);
+  spoolRow.spentDecimal = static_cast<int>((_spent - spoolRow.spentInteger) * 100);
   storage->writeSpool(&spoolRow, _spoolIdx);
 }
 
@@ -86,7 +76,7 @@ void Spool::_read()
   Storage::SpoolRow spoolRow;
   memcpy(spoolRow.uuid, _uuid, 4);
   _spoolIdx = storage->readSpool(&spoolRow);
-  _spent = (double)spoolRow.spentInteger + ((double)spoolRow.spentDecimal / 100);
+  _spent = static_cast<double>(spoolRow.spentInteger) + (static_cast<double>(spoolRow.spentDecimal) / 100);
   if (DEBUG_MODE == 1)
   {
     Serial.print("Set loaded spent: ");

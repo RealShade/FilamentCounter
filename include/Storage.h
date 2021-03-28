@@ -21,6 +21,7 @@ public:
     int spentInteger;
     byte spentDecimal;
   };
+
   Storage();
 
   byte readSpool(SpoolRow *spoolRow);
@@ -28,16 +29,14 @@ public:
   void writeOptions();
   void writeSpool(SpoolRow *spoolRow, byte spoolIdx);
 
-  void initEEPROM();
+  void clearEEPROM();
 
 private:
-  void _initDefault();
   void _readOptions();
   void _readSpools();
   void _unpackOptions(byte options);
   byte _packOptions();
   int _getAddrByIdx(int idx);
-  void _clearEEPROM();
 
   SpoolRow *_spoolCache = new SpoolRow[SPOOL_MAX];
 };
