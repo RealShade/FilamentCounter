@@ -33,17 +33,24 @@ void Menu::show(int counter) {
     display->printSpent();
     break;
   case Mode::holdForConfig:
-    display->printHold("Hold for conf", counter);
+    display->printHold("Hld4setOptions", counter);
     break;
   case Mode::holdForReset:
-    display->printHold("Hold for reset", counter);
+    display->printHold("Hld4resetSpool", counter);
+    break;
+  case Mode::holdForClear:
+    display->printHold("Hld4clearEEPROM", counter);
     break;
   case Mode::config:
     config->show();
     break;
   case Mode::reset:
     spool->setSpent(0);
-    display->printMsg("Reset done", 1);
+    spool->write();
+    display->printMsg("Spool reseted", 1);
+    break;
+  case Mode::clearEEPROM:
+    display->printMsg("EEPROM cleared", 1);
     break;
   }
 }

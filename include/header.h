@@ -20,7 +20,7 @@
 #define RFC_SS_PIN 53
 #define RFC_RST_PIN 5
 #define BUTTON_PIN 7
-#define GEAR_CIRCUMFERENCE 8 * PI
+#define GEAR_CIRCUMFERENCE 0.008 * PI
 #define DIRECTION -1
 #define DIFF_FOR_SAVE 200
 #define HOLD_COUNTER 5

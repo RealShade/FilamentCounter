@@ -34,7 +34,7 @@ void Config::setLcdAlwaysOn(bool isLcdAlwaysOn) {
   }
   _options.lcdAlwaysOn = isLcdAlwaysOn;
 }
-void Config::setDirection(float direction) {
+void Config::setDirection(double direction) {
   if (DEBUG_MODE == 1) {
     Serial.print("Direction set ");
     Serial.println(direction);
@@ -46,4 +46,4 @@ void Config::setDirection(float direction) {
 
 bool Config::isBuzzerOn() { return _options.buzzerOn; }
 bool Config::isLcdAlwaysOn() { return _options.lcdAlwaysOn; }
-float Config::getDirection() { return _options.direction; }
+double Config::getDirection() { return _options.direction; }
