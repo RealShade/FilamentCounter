@@ -30,7 +30,7 @@ void Menu::show(int counter) {
     display->printMsg("Wait for spool  ", 0);
     break;
   case Mode::spent:
-    display->printUUID();
+    display->printUuid();
     display->printSpent();
     break;
   case Mode::holdForConfig:

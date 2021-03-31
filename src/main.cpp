@@ -20,7 +20,7 @@ byte charWait[5][8] = {
     {0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111}};
 
 void setup() {
-  SPI.begin();
+  // SPI.begin();
   if (DEBUG_MODE == 1) {
     Serial.begin(9600);
     Serial.println("Application start");
@@ -30,11 +30,14 @@ void setup() {
     Serial.print("LCD init... ");
   }
   lcd.init();
-  lcd.backlight();
+  // lcd.backlight();
   lcd.clear();
   if (DEBUG_MODE == 1) {
     Serial.println("done");
   }
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Application init");
 
   for (int i = 0; i < 5; i++) {
     lcd.createChar(i, charWait[i]);
@@ -46,14 +49,14 @@ void setup() {
   button = new Button();
   optocoupler = new Optocoupler();
   storage = new Storage();
-  rfid = new Rfid();
+  // rfid = new Rfid();
 
   menu->setMode(Menu::Mode::waitForFilament);
 }
 
 void loop() {
   button->check();
-  rfid->check();
+  // rfid->check();
   if (spool != NULL) {
     optocoupler->check();
   }

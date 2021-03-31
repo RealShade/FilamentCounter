@@ -15,12 +15,13 @@
 #include "Spool.h"
 #include "Storage.h"
 
-#define PAIR_1_PIN 9
-#define PAIR_2_PIN 8
-#define RFC_SS_PIN 53
+#define PAIR_1_PIN 2
+#define PAIR_2_PIN 3
+#define BUTTON_PIN 4
+#define RFC_SS_PIN 10
 #define RFC_RST_PIN 5
-#define BUTTON_PIN 7
-#define GEAR_CIRCUMFERENCE 0.008 * PI
+#define ENDSTOP_PIN 6
+#define GEAR_CIRCUMFERENCE 0.008 * PI / 4
 #define DIRECTION -1
 #define DIFF_FOR_SAVE 200
 #define HOLD_COUNTER 5

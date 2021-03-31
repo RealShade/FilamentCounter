@@ -12,6 +12,8 @@ Rfid::Rfid() {
 // *****************************************************************************
 
 void Rfid::check() {
+  unsigned long uuid;
+
   // Ожидание
   if (!rider.PICC_IsNewCardPresent())
     return;
@@ -22,16 +24,14 @@ void Rfid::check() {
   }
   // вывод данных
 
-  if (spool != NULL && memcmp(spool->getUUID(), rider.uid.uidByte, 4) == 0) {
+  memcpy(&uuid, rider.uid.uidByte, 4);
+  if (spool != NULL && spool->getUuid() == uuid) {
     return;
   }
 
   if (DEBUG_MODE == 1) {
     Serial.print("Rfid UUID: ");
-    Serial.print(rider.uid.uidByte[0], HEX);
-    Serial.print(rider.uid.uidByte[1], HEX);
-    Serial.print(rider.uid.uidByte[2], HEX);
-    Serial.println(rider.uid.uidByte[3], HEX);
+    Serial.println(uuidAsString(uuid));
   }
 
   if (spool != NULL) {
@@ -40,6 +40,6 @@ void Rfid::check() {
     // }
     free(spool);
   }
-  spool = new Spool(rider.uid.uidByte);
+  spool = new Spool(uuid);
   menu->setMode(Menu::Mode::spent);
 }

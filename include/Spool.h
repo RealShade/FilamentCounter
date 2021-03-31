@@ -3,14 +3,14 @@
 
 #include <Arduino.h>
 
-const char *unpackUUIDString(byte _uuid[4]);
+const char *uuidAsString(unsigned long uuid);
 
 class Spool
 {
 public:
-  Spool(byte uuid[4]);
-  byte *getUUID();
-  void getUUID(byte uuid[4]);
+  Spool(unsigned long uuid);
+  unsigned long getUuid();
+  void getUuid(unsigned long uuid);
   double getSpent();
   void incSpent(double diff);
   void write();
@@ -19,9 +19,8 @@ public:
 private:
   void _read();
 
-  byte _uuid[4];
-  double _spent = 0;
-  double _spentLastSave = 0;
+  unsigned long _uuid;
+  double _spent = 0, _spentLastSave = 0;
   byte _spoolIdx;
 };
 

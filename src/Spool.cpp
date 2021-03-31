@@ -1,37 +1,33 @@
 #include "header.h"
 
-char uuid[9];
+char uuidString[8];
 
-const char *unpackUUIDString(byte _uuid[4])
+const char *uuidAsString(unsigned long uuid)
 {
-  for (byte j = 0; j < 4; j++)
-  {
-    sprintf(uuid, "%X%X%X%X", _uuid[0], _uuid[1], _uuid[2], _uuid[3]);
-  }
-  return uuid;
+
+  sprintf(uuidString, "%08lX", uuid);
+
+  return uuidString;
 }
 
 // *****************************************************************************
 
-Spool::Spool(byte uuid[4])
+Spool::Spool(unsigned long uuid)
 {
-  memcpy(_uuid, uuid, 4);
+  _uuid = uuid;
   if (DEBUG_MODE == 1)
   {
     Serial.print("Spool init: ");
-    Serial.print(_uuid[0], HEX);
-    Serial.print(_uuid[1], HEX);
-    Serial.print(_uuid[2], HEX);
-    Serial.println(_uuid[3], HEX);
+    Serial.println(uuidAsString(uuid));
   }
   _read();
 }
 
 // *****************************************************************************
 
-byte *Spool::getUUID() { return _uuid; }
+unsigned long Spool::getUuid() { return _uuid; }
 
-void Spool::getUUID(byte uuid[4]) { uuid = _uuid; }
+void Spool::getUuid(unsigned long uuid) { uuid = _uuid; }
 
 double Spool::getSpent() { return _spent; }
 
@@ -52,8 +48,9 @@ void Spool::incSpent(double diff)
 void Spool::write()
 {
   Storage::SpoolRow spoolRow;
+
   spoolRow.hasData = 1;
-  memcpy(spoolRow.uuid, _uuid, 4);
+  spoolRow.uuid = _uuid;
   spoolRow.spentInteger = static_cast<int>(_spent);
   spoolRow.spentDecimal = static_cast<int>((_spent - spoolRow.spentInteger) * 100);
   storage->writeSpool(&spoolRow, _spoolIdx);
@@ -74,7 +71,8 @@ void Spool::reset()
 void Spool::_read()
 {
   Storage::SpoolRow spoolRow;
-  memcpy(spoolRow.uuid, _uuid, 4);
+  
+  spoolRow.uuid = _uuid;
   _spoolIdx = storage->readSpool(&spoolRow);
   _spent = static_cast<double>(spoolRow.spentInteger) + (static_cast<double>(spoolRow.spentDecimal) / 100);
   if (DEBUG_MODE == 1)

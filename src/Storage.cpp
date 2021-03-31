@@ -15,6 +15,7 @@ Storage::Storage()
     Serial.print("Limit spools: ");
     Serial.println(SPOOL_LIMIT);
   }
+  _spoolCache = new SpoolRow[SPOOL_LIMIT];
   _readOptions();
   _readSpools();
 }
@@ -28,7 +29,7 @@ byte Storage::readSpool(SpoolRow *spoolRow)
   if (DEBUG_MODE)
   {
     Serial.print("Search spool: ");
-    Serial.println(unpackUUIDString(spoolRow->uuid));
+    Serial.println(uuidAsString(spoolRow->uuid));
   }
   for (int i = 0; i < SPOOL_LIMIT; i++)
   {
@@ -37,12 +38,12 @@ byte Storage::readSpool(SpoolRow *spoolRow)
       if (DEBUG_MODE)
       {
         Serial.print("... compare ");
-        Serial.print(unpackUUIDString(_spoolCache[i].uuid));
+        Serial.print(uuidAsString(_spoolCache[i].uuid));
         Serial.print(" and ");
-        Serial.print(unpackUUIDString(spoolRow->uuid));
+        Serial.print(uuidAsString(spoolRow->uuid));
         Serial.print("... ");
       }
-      if (memcmp(&_spoolCache[i].uuid, &spoolRow->uuid, 4) == 0)
+      if (_spoolCache[i].uuid == spoolRow->uuid)
       {
         memcpy(spoolRow, &_spoolCache[i], sizeof(SpoolRow));
         Serial.println("found");
@@ -148,20 +149,22 @@ void Storage::_readOptions()
 
 void Storage::_readSpools()
 {
+  SpoolRow spoolRow;
+
   if (DEBUG_MODE)
   {
     Serial.println("Read spools... ");
   }
-
   for (int i = 0; i < SPOOL_LIMIT; i++)
   {
-    EEPROM.get(_getAddrByIdx(i), _spoolCache[i]);
+    EEPROM.get(_getAddrByIdx(i), spoolRow);
+    memcpy(&_spoolCache[i], &spoolRow, sizeof(SpoolRow));
     if (DEBUG_MODE)
     {
       if (_spoolCache[i].hasData == 1)
       {
         Serial.print("... found ");
-        Serial.print(unpackUUIDString(_spoolCache[i].uuid));
+        Serial.print(uuidAsString(_spoolCache[i].uuid));
         Serial.print(" ");
         Serial.println(_spoolCache[i].spentInteger + static_cast<double>(_spoolCache[i].spentDecimal) / 100);
       }

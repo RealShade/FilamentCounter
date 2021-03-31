@@ -17,8 +17,8 @@ public:
   struct SpoolRow
   {
     byte hasData; // 1 - has data, everything else - empty
-    byte uuid[4];
-    int spentInteger;
+    unsigned long uuid;
+    unsigned int spentInteger;
     byte spentDecimal;
   };
 
@@ -38,5 +38,5 @@ private:
   byte _packOptions();
   int _getAddrByIdx(int idx);
 
-  SpoolRow *_spoolCache = new SpoolRow[SPOOL_MAX];
+  SpoolRow *_spoolCache;
 };

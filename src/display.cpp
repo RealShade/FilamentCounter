@@ -12,10 +12,10 @@ Display::Display()
 
 // *****************************************************************************
 
-void Display::printUUID()
+void Display::printUuid()
 {
   clear(0);
-  printMsg(unpackUUIDString(spool->getUUID()), 0);
+  printMsg(uuidAsString(spool->getUuid()), 0);
 }
 
 // *****************************************************************************
