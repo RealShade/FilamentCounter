@@ -5,9 +5,6 @@
 #define SPOOL_MAX 255
 #define SPOOL_LIMIT \
   min(SPOOL_MAX, (int)((EEPROM.length() - ADDR_SPOOL_STORAGE_OFFSET) / sizeof(SpoolRow)))
-#define BIT_BUZZER 1
-#define BIT_LCD_ALWAYS_ON 2
-#define BIT_DIRECTION 4
 
 // *****************************************************************************
 
@@ -25,18 +22,13 @@ public:
   Storage();
 
   byte readSpool(SpoolRow *spoolRow);
-
-  void writeOptions();
   void writeSpool(SpoolRow *spoolRow, byte spoolIdx);
+
+  byte readOptions();
+  void writeOptions(byte options);
 
   void clearEEPROM();
 
 private:
-  void _readOptions();
-  void _readSpools();
-  void _unpackOptions(byte options);
-  byte _packOptions();
   int _getAddrByIdx(int idx);
-
-  SpoolRow *_spoolCache;
 };

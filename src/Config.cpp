@@ -4,10 +4,18 @@
 
 Config::Config()
 {
+  byte options;
   if (DEBUG_MODE == 1)
-  {
     Serial.println("Config init");
+  options = storage->readOptions();
+  if (options == 255)
+  {
+    if (DEBUG_MODE)
+      Serial.println("init default options");
+    storage->writeOptions(_packOptions());
   }
+  else
+    _unpackOptions(options);
 }
 
 // *****************************************************************************
@@ -25,6 +33,9 @@ void Config::show(int counter)
     break;
   case MenuOptions::direction:
     sprintf(msg, "Spool in %s", _options.direction == 1 ? "   TOP" : "  DOWN");
+    break;
+  case MenuOptions::endstop:
+    sprintf(msg, "Endstop %s", _options.lcdAlwaysOn ? "      ON" : "     OFF");
     break;
   case MenuOptions::exit:
     sprintf(msg, "Exit           ");
@@ -49,8 +60,12 @@ void Config::changeOption()
     setDirection(-_options.direction);
     show();
     break;
+  case MenuOptions::endstop:
+    setLcdAlwaysOn(!_options.endstop);
+    show();
+    break;
   case MenuOptions::exit:
-    storage->writeOptions();
+    storage->writeOptions(_packOptions());
     menu->setMode(Menu::Mode::holdForConfig);
     _menuOption = MenuOptions::buzzer;
     display->clear(1);
@@ -85,10 +100,21 @@ void Config::setDirection(double direction)
   }
   _options.direction = direction == 1 ? 1 : -1;
 }
+void Config::setEndstopOn(bool isEndstopOn)
+{
+  if (DEBUG_MODE == 1)
+  {
+    Serial.print("Endstop set ");
+    Serial.println(isEndstopOn ? "on" : "off");
+  }
+  _options.endstop = isEndstopOn;
+}
 
 bool Config::isBuzzerOn() { return _options.buzzerOn; }
 bool Config::isLcdAlwaysOn() { return _options.lcdAlwaysOn; }
 double Config::getDirection() { return _options.direction; }
+bool Config::isEndstopOn() { return _options.endstop; }
+
 void Config::nextOption()
 {
   switch (_menuOption)
@@ -102,9 +128,30 @@ void Config::nextOption()
   case MenuOptions::direction:
     _menuOption = MenuOptions::exit;
     break;
+  case MenuOptions::endstop:
+    _menuOption = MenuOptions::direction;
+    break;
   case MenuOptions::exit:
     _menuOption = MenuOptions::buzzer;
     break;
   }
   show();
+}
+
+// *****************************************************************************
+
+void Config::_unpackOptions(byte options)
+{
+  setBuzzerOn(options & BIT_BUZZER);
+  setLcdAlwaysOn(options & BIT_LCD_ALWAYS_ON);
+  setDirection(options & BIT_DIRECTION ? 1 : -1);
+  setEndstopOn(options & BIT_ENDSTOP);
+}
+
+byte Config::_packOptions()
+{
+  return static_cast<byte>(isBuzzerOn()) * BIT_BUZZER +
+         static_cast<byte>(isLcdAlwaysOn()) * BIT_LCD_ALWAYS_ON +
+         static_cast<byte>(getDirection() == 1) * BIT_DIRECTION +
+         static_cast<byte>(isEndstopOn()) * BIT_ENDSTOP;
 }

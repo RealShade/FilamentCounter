@@ -14,6 +14,8 @@
 #include "Rfid.h"
 #include "Spool.h"
 #include "Storage.h"
+#include "Endstop.h"
+#include "Buzzer.h"
 
 #define PAIR_1_PIN 2
 #define PAIR_2_PIN 3
@@ -39,5 +41,7 @@ extern Button *button;
 extern Optocoupler *optocoupler;
 extern Rfid *rfid;
 extern Storage *storage;
+extern Endstop *endstop;
+extern Buzzer *buzzer;
 
 #endif
