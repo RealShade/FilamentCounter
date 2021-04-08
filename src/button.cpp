@@ -24,8 +24,9 @@ void Button::check()
     }
 
     // If button release
-    if (_currentState == LOW)
+    if (_currentState == LOW && !endstop->isAlert())
     {
+      // @TODO refactoring this to menu->nextOption()
       switch (menu->getMode())
       {
       case Menu::Mode::spent:
@@ -49,15 +50,18 @@ void Button::check()
         break;
       }
     }
+    else if (_currentState == LOW && endstop->isAlert())
+    {
+      endstop->resetAlert();
+    }
 
     _pressTimeStart = millis();
     _counter = HOLD_COUNTER + 1;
-    _prevState = _currentState;
   }
   else if (_currentState == HIGH)
   {
     // If button hold
-    if (_counter > -1 && (menu->getMode() == Menu::Mode::holdForConfig || menu->getMode() == Menu::Mode::holdForReset || menu->getMode() == Menu::Mode::holdForClear || menu->getMode() == Menu::Mode::config))
+    if (!endstop->isAlert() && _counter > -1 && (menu->getMode() == Menu::Mode::holdForConfig || menu->getMode() == Menu::Mode::holdForReset || menu->getMode() == Menu::Mode::holdForClear || menu->getMode() == Menu::Mode::config))
     {
       if (millis() - _pressTimeStart > HOLD_DETECT)
       {
@@ -72,6 +76,7 @@ void Button::check()
         }
         else
         {
+          // @TODO refactoring this to menu.holdedOption()
           switch (menu->getMode())
           {
           case Menu::Mode::holdForConfig:
@@ -84,7 +89,7 @@ void Button::check()
             menu->setMode(Menu::Mode::clearEEPROM);
             break;
           case Menu::Mode::config:
-            config->changeOption();
+            config->holdedOption();
             break;
           default:
             menu->setMode(Menu::Mode::spent);
@@ -96,4 +101,5 @@ void Button::check()
       }
     }
   }
+  _prevState = _currentState;
 }

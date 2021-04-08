@@ -1,4 +1,5 @@
-class Display {
+class Display
+{
 public:
   Display();
   void printUuid();
@@ -6,4 +7,7 @@ public:
   void printHold(const char *text, int counter);
   void clear(short row);
   void printMsg(const char *uuid, short row);
+
+private:
+  void _printEndstopAlert();
 };

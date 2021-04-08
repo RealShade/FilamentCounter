@@ -2,6 +2,8 @@
 
 char msg[16];
 
+// *****************************************************************************
+
 Display::Display()
 {
   if (DEBUG_MODE == 1)
@@ -18,13 +20,16 @@ void Display::printUuid()
   printMsg(uuidAsString(spool->getUuid()), 0);
 }
 
-// *****************************************************************************
-
 void Display::printSpent()
 {
   clear(1);
-  dtostrf(spool->getSpent(), 7, 3, msg);
-  printMsg(msg, 1);
+  if (!endstop->isAlert())
+  {
+    dtostrf(spool->getSpent(), 8, 3, msg);
+    printMsg(msg, 1);
+  }
+  else
+    _printEndstopAlert();
 }
 
 void Display::printHold(const char *text, int counter = 0)
@@ -45,3 +50,11 @@ void Display::printMsg(const char *msg, short row = 0)
     Serial.println(msg);
   }
 }
+
+// *****************************************************************************
+
+void Display::_printEndstopAlert()
+{
+  printMsg("No filament!", 1);
+}
+

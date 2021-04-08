@@ -35,7 +35,7 @@ void Config::show(int counter)
     sprintf(msg, "Spool in %s", _options.direction == 1 ? "   TOP" : "  DOWN");
     break;
   case MenuOptions::endstop:
-    sprintf(msg, "Endstop %s", _options.lcdAlwaysOn ? "      ON" : "     OFF");
+    sprintf(msg, "Endstop %s", _options.endstop ? "      ON" : "     OFF");
     break;
   case MenuOptions::exit:
     sprintf(msg, "Exit           ");
@@ -44,24 +44,24 @@ void Config::show(int counter)
   counter == -1 ? display->printMsg(msg, 1) : display->printHold(msg, counter);
 }
 
-void Config::changeOption()
+void Config::holdedOption()
 {
   switch (_menuOption)
   {
   case MenuOptions::buzzer:
-    setBuzzerOn(!_options.buzzerOn);
+    _setBuzzerOn(!_options.buzzerOn);
     show();
     break;
   case MenuOptions::lcdAlwaysOn:
-    setLcdAlwaysOn(!_options.lcdAlwaysOn);
+    _setLcdAlwaysOn(!_options.lcdAlwaysOn);
     show();
     break;
   case MenuOptions::direction:
-    setDirection(-_options.direction);
+    _setDirection(-_options.direction);
     show();
     break;
   case MenuOptions::endstop:
-    setLcdAlwaysOn(!_options.endstop);
+    _setEndstopOn(!_options.endstop);
     show();
     break;
   case MenuOptions::exit:
@@ -71,43 +71,6 @@ void Config::changeOption()
     display->clear(1);
     break;
   }
-}
-
-void Config::setBuzzerOn(bool isBuzzerOn)
-{
-  if (DEBUG_MODE == 1)
-  {
-    Serial.print("Buzzer set ");
-    Serial.println(isBuzzerOn ? "on" : "off");
-  }
-  _options.buzzerOn = isBuzzerOn;
-}
-void Config::setLcdAlwaysOn(bool isLcdAlwaysOn)
-{
-  if (DEBUG_MODE == 1)
-  {
-    Serial.print("LCD set ");
-    Serial.println(isLcdAlwaysOn ? "on" : "off");
-  }
-  _options.lcdAlwaysOn = isLcdAlwaysOn;
-}
-void Config::setDirection(double direction)
-{
-  if (DEBUG_MODE == 1)
-  {
-    Serial.print("Direction set ");
-    Serial.println(direction);
-  }
-  _options.direction = direction == 1 ? 1 : -1;
-}
-void Config::setEndstopOn(bool isEndstopOn)
-{
-  if (DEBUG_MODE == 1)
-  {
-    Serial.print("Endstop set ");
-    Serial.println(isEndstopOn ? "on" : "off");
-  }
-  _options.endstop = isEndstopOn;
 }
 
 bool Config::isBuzzerOn() { return _options.buzzerOn; }
@@ -126,10 +89,10 @@ void Config::nextOption()
     _menuOption = MenuOptions::direction;
     break;
   case MenuOptions::direction:
-    _menuOption = MenuOptions::exit;
+    _menuOption = MenuOptions::endstop;
     break;
   case MenuOptions::endstop:
-    _menuOption = MenuOptions::direction;
+    _menuOption = MenuOptions::exit;
     break;
   case MenuOptions::exit:
     _menuOption = MenuOptions::buzzer;
@@ -140,12 +103,49 @@ void Config::nextOption()
 
 // *****************************************************************************
 
+void Config::_setBuzzerOn(bool isBuzzerOn)
+{
+  if (DEBUG_MODE == 1)
+  {
+    Serial.print("Buzzer set ");
+    Serial.println(isBuzzerOn ? "on" : "off");
+  }
+  _options.buzzerOn = isBuzzerOn;
+}
+void Config::_setLcdAlwaysOn(bool isLcdAlwaysOn)
+{
+  if (DEBUG_MODE == 1)
+  {
+    Serial.print("LCD set ");
+    Serial.println(isLcdAlwaysOn ? "on" : "off");
+  }
+  _options.lcdAlwaysOn = isLcdAlwaysOn;
+}
+void Config::_setDirection(double direction)
+{
+  if (DEBUG_MODE == 1)
+  {
+    Serial.print("Direction set ");
+    Serial.println(direction);
+  }
+  _options.direction = direction == 1 ? 1 : -1;
+}
+void Config::_setEndstopOn(bool isEndstopOn)
+{
+  if (DEBUG_MODE == 1)
+  {
+    Serial.print("Endstop set ");
+    Serial.println(isEndstopOn ? "on" : "off");
+  }
+  _options.endstop = isEndstopOn;
+}
+
 void Config::_unpackOptions(byte options)
 {
-  setBuzzerOn(options & BIT_BUZZER);
-  setLcdAlwaysOn(options & BIT_LCD_ALWAYS_ON);
-  setDirection(options & BIT_DIRECTION ? 1 : -1);
-  setEndstopOn(options & BIT_ENDSTOP);
+  _setBuzzerOn(options & BIT_BUZZER);
+  _setLcdAlwaysOn(options & BIT_LCD_ALWAYS_ON);
+  _setDirection(options & BIT_DIRECTION ? 1 : -1);
+  _setEndstopOn(options & BIT_ENDSTOP);
 }
 
 byte Config::_packOptions()

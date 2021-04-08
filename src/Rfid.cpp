@@ -2,41 +2,56 @@
 
 // *****************************************************************************
 
-Rfid::Rfid() {
-  if (DEBUG_MODE == 1) {
+Rfid::Rfid()
+{
+  if (DEBUG_MODE == 1)
+  {
     Serial.println("Rfid init");
   }
+  rider.PCD_Init();
+  Serial.println(rider.PCD_PerformSelfTest() ? "ok" : "error");
   rider.PCD_Init();
 }
 
 // *****************************************************************************
 
-void Rfid::check() {
+void Rfid::check()
+{
   unsigned long uuid;
 
   // Ожидание
   if (!rider.PICC_IsNewCardPresent())
     return;
   // чтение
-  if (!rider.PICC_ReadCardSerial()) {
+  if (!rider.PICC_ReadCardSerial())
+  {
     Serial.println("UUID no found");
+    //   rider.PCD_Reset();
+    //   delay(500);
+    // rider.PCD_Init();
     return;
   }
   // вывод данных
-
   memcpy(&uuid, rider.uid.uidByte, 4);
-  if (spool != NULL && spool->getUuid() == uuid) {
+  // rider.PCD_Reset();
+  //   delay(500);
+  // rider.PCD_Init();
+  if (spool != NULL && spool->getUuid() == uuid)
+  {
+    Serial.println("UUID already read");
     return;
   }
 
-  if (DEBUG_MODE == 1) {
+  if (DEBUG_MODE == 1)
+  {
     Serial.print("Rfid UUID: ");
     Serial.println(uuidAsString(uuid));
   }
 
-  if (spool != NULL) {
+  if (spool != NULL)
+  {
     // if (spool->getSpent() > 0) {
-      spool->write();
+    spool->write();
     // }
     free(spool);
   }

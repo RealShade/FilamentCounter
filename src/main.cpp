@@ -23,7 +23,7 @@ byte charWait[5][8] = {
 
 void setup()
 {
-  // SPI.begin();
+  SPI.begin();
   if (DEBUG_MODE == 1)
   {
     Serial.begin(9600);

@@ -1,6 +1,7 @@
 class Buzzer
 {
 public:
+    Buzzer();
     void check();
     void alertStart();
     void alertStop();
