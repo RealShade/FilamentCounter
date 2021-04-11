@@ -22,7 +22,7 @@ public:
   Storage();
 
   byte readSpool(SpoolRow *spoolRow);
-  void writeSpool(SpoolRow *spoolRow, byte spoolIdx);
+  void writeSpool(SpoolRow spoolRow, byte spoolIdx);
 
   byte readOptions();
   void writeOptions(byte options);

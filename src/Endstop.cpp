@@ -1,9 +1,14 @@
 #include "header.h"
 
+// *****************************************************************************
+
 Endstop::Endstop()
 {
     pinMode(ENDSTOP_PIN, INPUT);
+    _prevState = digitalRead(ENDSTOP_PIN);
 }
+
+// *****************************************************************************
 
 void Endstop::check()
 {
@@ -12,13 +17,13 @@ void Endstop::check()
     {
         if (state == HIGH && _armed)
         {
-            // Start alert
+            // Start alarm
             if (DEBUG_MODE == 1)
             {
                 Serial.println("Filament end");
             }
-            _alert = true;
-            buzzer->alertStart();
+            _alarm = true;
+            buzzer->alarmStart();
             if (menu->getMode() == Menu::Mode::spent)
             {
                 display->printSpent();
@@ -31,30 +36,30 @@ void Endstop::check()
             {
                 Serial.println("Filament load");
             }
-            _alert = false;
-            buzzer->alertStop();
+            _alarm = false;
+            buzzer->buzzerOff();
             _armed = config->isEndstopOn();
             if (menu->getMode() == Menu::Mode::spent)
             {
                 display->printSpent();
             }
         }
-    }
     _prevState = state;
+    }
 }
 
-bool Endstop::isAlert()
+bool Endstop::isAlarm()
 {
-    return _alert;
+    return _alarm;
 }
 
-void Endstop::resetAlert()
+void Endstop::resetAlarm()
 {
     if (DEBUG_MODE == 1)
     {
-        Serial.println("Alert reset");
+        Serial.println("Alarm reset");
     }
     _armed = false;
-    _alert = false;
-    buzzer->alertStop();
+    _alarm = false;
+    buzzer->buzzerOff();
 }

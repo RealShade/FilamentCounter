@@ -35,7 +35,7 @@ void Config::show(int counter)
     sprintf(msg, "Spool in %s", _options.direction == 1 ? "   TOP" : "  DOWN");
     break;
   case MenuOptions::endstop:
-    sprintf(msg, "Endstop %s", _options.endstop ? "      ON" : "     OFF");
+    sprintf(msg, "Endstop %s", _options.endstop ? "     ON" : "    OFF");
     break;
   case MenuOptions::exit:
     sprintf(msg, "Exit           ");

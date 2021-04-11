@@ -89,12 +89,15 @@ void Storage::writeOptions(byte options)
     Serial.println("done");
 }
 
-void Storage::writeSpool(SpoolRow *spoolRow, byte spoolIdx)
+void Storage::writeSpool(SpoolRow spoolRow, byte spoolIdx)
 {
   if (DEBUG_MODE)
   {
     Serial.print("Write spool ");
     Serial.print(spoolIdx);
+    Serial.print(" (");
+    Serial.print(_getAddrByIdx(spoolIdx));
+    Serial.print(" )");
     Serial.print("... ");
   }
   EEPROM.put(_getAddrByIdx(spoolIdx), spoolRow);

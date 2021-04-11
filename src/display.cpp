@@ -23,7 +23,7 @@ void Display::printUuid()
 void Display::printSpent()
 {
   clear(1);
-  if (!endstop->isAlert())
+  if (!endstop->isAlarm())
   {
     dtostrf(spool->getSpent(), 8, 3, msg);
     printMsg(msg, 1);

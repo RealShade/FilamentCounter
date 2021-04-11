@@ -1,13 +1,21 @@
 class Buzzer
 {
 public:
+    enum class Mode : byte
+    {
+        off,
+        click,
+        alarm,
+    };
+
     Buzzer();
     void check();
-    void alertStart();
-    void alertStop();
+    void alarmStart();
+    void clickStart();
+    void buzzerOff();
 
 private:
     bool _state = false;
-    bool _cycleState = false;
-    unsigned long _cycleTime = 0;
+    unsigned long _timeStart = 0;
+    Mode _mode = Mode::off;
 };

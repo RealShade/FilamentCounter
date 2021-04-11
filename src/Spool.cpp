@@ -1,6 +1,6 @@
 #include "header.h"
 
-char uuidString[8];
+char uuidString[9];
 
 const char *uuidAsString(unsigned long uuid)
 {
@@ -53,7 +53,7 @@ void Spool::write()
   spoolRow.uuid = _uuid;
   spoolRow.spentInteger = static_cast<int>(_spent);
   spoolRow.spentDecimal = static_cast<int>((_spent - spoolRow.spentInteger) * 100);
-  storage->writeSpool(&spoolRow, _spoolIdx);
+  storage->writeSpool(spoolRow, _spoolIdx);
 }
 
 void Spool::reset()

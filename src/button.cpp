@@ -24,7 +24,7 @@ void Button::check()
     }
 
     // If button release
-    if (_currentState == LOW && !endstop->isAlert())
+    if (_currentState == LOW && !endstop->isAlarm())
     {
       // @TODO refactoring this to menu->nextOption()
       switch (menu->getMode())
@@ -50,9 +50,12 @@ void Button::check()
         break;
       }
     }
-    else if (_currentState == LOW && endstop->isAlert())
+    else if (_currentState == LOW && endstop->isAlarm())
     {
-      endstop->resetAlert();
+      endstop->resetAlarm();
+    }
+    else if (_currentState == HIGH) {
+      buzzer->clickStart();
     }
 
     _pressTimeStart = millis();
@@ -61,7 +64,7 @@ void Button::check()
   else if (_currentState == HIGH)
   {
     // If button hold
-    if (!endstop->isAlert() && _counter > -1 && (menu->getMode() == Menu::Mode::holdForConfig || menu->getMode() == Menu::Mode::holdForReset || menu->getMode() == Menu::Mode::holdForClear || menu->getMode() == Menu::Mode::config))
+    if (!endstop->isAlarm() && _counter > -1 && (menu->getMode() == Menu::Mode::holdForConfig || menu->getMode() == Menu::Mode::holdForReset || menu->getMode() == Menu::Mode::holdForClear || menu->getMode() == Menu::Mode::config))
     {
       if (millis() - _pressTimeStart > HOLD_DETECT)
       {

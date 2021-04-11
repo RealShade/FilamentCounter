@@ -3,11 +3,11 @@ class Endstop
 public:
     Endstop();
     void check();
-    bool isAlert();
-    void resetAlert();
+    bool isAlarm();
+    void resetAlarm();
 
 private:
-    int _prevState = -1;
+    int _prevState;
     bool _armed = false;
-    bool _alert = false;
+    bool _alarm = false;
 };

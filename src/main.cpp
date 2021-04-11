@@ -35,7 +35,7 @@ void setup()
     Serial.print("LCD init... ");
   }
   lcd.init();
-  // lcd.backlight();
+  lcd.backlight();
   lcd.clear();
   if (DEBUG_MODE == 1)
   {

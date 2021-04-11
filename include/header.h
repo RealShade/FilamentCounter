@@ -29,7 +29,7 @@
 #define DIFF_FOR_SAVE 200
 #define HOLD_COUNTER 5
 #define HOLD_DETECT 500
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 
 extern LiquidCrystal_I2C lcd;
 extern MFRC522 rider;

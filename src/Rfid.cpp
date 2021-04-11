@@ -42,6 +42,8 @@ void Rfid::check()
     return;
   }
 
+  buzzer->clickStart();
+
   if (DEBUG_MODE == 1)
   {
     Serial.print("Rfid UUID: ");
