@@ -33,6 +33,9 @@ void Button::check()
       case Menu::Mode::waitForFilament:
         menu->setMode(Menu::Mode::holdForConfig);
         break;
+      case Menu::Mode::holdForUnloadSpool:
+        spool == NULL ? menu->setMode(Menu::Mode::holdForClear) : menu->setMode(Menu::Mode::holdForConfig);
+        break;
       case Menu::Mode::holdForConfig:
         spool == NULL ? menu->setMode(Menu::Mode::holdForClear) : menu->setMode(Menu::Mode::holdForReset);
         break;
@@ -82,6 +85,9 @@ void Button::check()
           // @TODO refactoring this to menu.holdedOption()
           switch (menu->getMode())
           {
+          case Menu::Mode::holdForUnloadSpool:
+            menu->setMode(Menu::Mode::unload);
+            break;
           case Menu::Mode::holdForConfig:
             menu->setMode(Menu::Mode::config);
             break;

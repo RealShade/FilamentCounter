@@ -60,7 +60,11 @@ void setup()
   endstop = new Endstop();
   buzzer = new Buzzer();
 
-  menu->setMode(Menu::Mode::waitForFilament);
+  storage->readLastSpool();
+    if (spool == NULL)
+  {
+    menu->setMode(Menu::Mode::waitForFilament);
+  }
 }
 
 void loop()

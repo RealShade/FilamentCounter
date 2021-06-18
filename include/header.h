@@ -24,12 +24,12 @@
 #define RFC_RST_PIN 5
 #define ENDSTOP_PIN 6
 #define BUZZER_PIN 7
-#define GEAR_CIRCUMFERENCE 0.008 * PI / 4
+#define GEAR_CIRCUMFERENCE 0.008 * PI / 3
 #define DIRECTION -1
 #define DIFF_FOR_SAVE 200
 #define HOLD_COUNTER 5
 #define HOLD_DETECT 500
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 
 extern LiquidCrystal_I2C lcd;
 extern MFRC522 rider;

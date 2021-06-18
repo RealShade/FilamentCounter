@@ -1,8 +1,9 @@
 #include <Arduino.h>
 
 #define ADDR_OPTIONS 0
+#define ADDR_LAST_SPOOL_UUID 2
 #define ADDR_SPOOL_STORAGE_OFFSET 10
-#define SPOOL_MAX 255
+#define SPOOL_MAX 254
 #define SPOOL_LIMIT \
   min(SPOOL_MAX, (int)((EEPROM.length() - ADDR_SPOOL_STORAGE_OFFSET) / sizeof(SpoolRow)))
 
@@ -26,6 +27,9 @@ public:
 
   byte readOptions();
   void writeOptions(byte options);
+
+  void readLastSpool();
+  void writeLastSpool(unsigned long uuid);
 
   void clearEEPROM();
 

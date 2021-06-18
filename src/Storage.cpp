@@ -75,7 +75,7 @@ byte Storage::readOptions()
 
   if (DEBUG_MODE)
     Serial.print("Read options: ");
-  EEPROM.get(0, options);
+  EEPROM.get(ADDR_OPTIONS, options);
 
   return options;
 }
@@ -85,6 +85,36 @@ void Storage::writeOptions(byte options)
   if (DEBUG_MODE)
     Serial.print("Write options... ");
   EEPROM.put(ADDR_OPTIONS, options);
+  if (DEBUG_MODE)
+    Serial.println("done");
+}
+
+void Storage::readLastSpool()
+{
+  unsigned long uuid;
+
+  if (DEBUG_MODE)
+    Serial.print("Read last spool idx... ");
+  EEPROM.get(ADDR_LAST_SPOOL_UUID, uuid);
+  if (uuid < 256UL * 256UL * 256UL * 256UL)
+  {
+    if (DEBUG_MODE)
+      Serial.print(uuid);
+    if (spool != NULL)
+    {
+      spool->write();
+      free(spool);
+    }
+    spool = new Spool(uuid);
+    menu->setMode(Menu::Mode::spent);
+  }
+}
+
+void Storage::writeLastSpool(unsigned long uuid)
+{
+  if (DEBUG_MODE)
+    Serial.print("Write last spool... ");
+  EEPROM.put(ADDR_LAST_SPOOL_UUID, uuid);
   if (DEBUG_MODE)
     Serial.println("done");
 }

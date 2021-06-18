@@ -1,14 +1,16 @@
 class Menu {
 public:
   enum class Mode : short {
-    waitForFilament = 0,
-    spent = 1,
-    holdForConfig = 2,
-    config = 3,
-    holdForReset = 4,
-    reset = 5,
-    holdForClear = 6,
-    clearEEPROM = 7
+    waitForFilament,
+    spent,
+    holdForUnloadSpool,
+    unload,
+    holdForConfig,
+    config,
+    holdForReset,
+    reset,
+    holdForClear,
+    clearEEPROM
   };
 
   Menu();

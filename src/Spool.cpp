@@ -21,6 +21,7 @@ Spool::Spool(unsigned long uuid)
     Serial.println(uuidAsString(uuid));
   }
   _read();
+  storage->writeLastSpool(uuid);
 }
 
 // *****************************************************************************
